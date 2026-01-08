@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Processs_Files (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Processs_Files (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

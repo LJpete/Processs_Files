@@ -1,0 +1,13 @@
+"[ProtocolPath]"
+ /autologin
+ /import-
+ raw:
+ "C:\Users\petel\Documents\MyAssays\raw\[Hbarcode]*"
+ /import-
+ sample ids:
+ "I:\mp-common\AUTOLab\NivoSampleSheet\NivoOut\[Hbarcode]*.xls"
+ /calc
+ /export-report:xlsx
+ /print
+ /noappwin
+ /calc-log:"C:\Users\petel\Documents\MyAssays\Logs\[Hbarcode]calculation.log"
