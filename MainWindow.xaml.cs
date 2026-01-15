@@ -6,12 +6,14 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ABI.Windows.ApplicationModel.Activation;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Graphics;
 using Windows.Security.Cryptography.Core;
+using WinRT.Interop;
 
 namespace App1
 {
@@ -81,16 +83,20 @@ namespace App1
 
         public MainWindow()
         {
-            InitializeComponent();
-            ExtendsContentIntoTitleBar = true;
+            this.InitializeComponent();
 
-            // Set window size (WinUI 3 correct way)
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            // Remove system title bar
+            ExtendsContentIntoTitleBar = true;
+       
+            // Optional: disable resize
+            var hwnd = WindowNative.GetWindowHandle(this);
+            var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
             var appWindow = AppWindow.GetFromWindowId(windowId);
 
-            appWindow.Resize(new SizeInt32(800, 600));
+            appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+            this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(800, 700, 735, 485));
         }
+
 
         public void PlateCount(object sender, RoutedEventArgs e)
         {
@@ -540,7 +546,9 @@ namespace App1
                 _ = dlg.ShowAsync();
             }
         }
-
+        private async void OnCombineClick(object sender, RoutedEventArgs e)
+        {
+        }
 
 
         private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)

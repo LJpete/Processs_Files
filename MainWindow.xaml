@@ -4,95 +4,118 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Launcher">
 
-
-    <Grid Background="#d1cfcb">
+    <Grid Background="#313834">
         <Border
             Background="#5d6b63"
-            CornerRadius="12"
-            Padding="20"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            
             Width="470"
             Height="300">
-            <!-- Set size on Border instead -->
 
-            <StackPanel Spacing="14">
-                <!-- Title -->
-                <TextBlock
-                    Text="Plate Setup"
-                    FontSize="20"
-                    FontWeight="SemiBold"
-                    Foreground="#dce5e6"
-                    HorizontalAlignment="Center" />
+            <Border.Shadow>
+                <ThemeShadow />
+            </Border.Shadow>
 
-                <!-- Dropdown button -->
-                <DropDownButton 
+            <StackPanel Spacing="10">
+                <Grid>
+                    <!-- Title -->
+                    <Polygon
+                    Points="0,0 352.5,0 300,45 0,45"
+                    Fill="#313834"/>
+                    <Polyline
+                    Points="346.64, 1 289.16,50 0,50"
+                    Stroke="#FF0078D7"
+                    StrokeThickness="1.5"/>
+                    <Polyline
+                    Points="470, 0 352.5,0 300,45 0,45"
+                    Stroke="#dce5e6"
+                    StrokeThickness="2"/>
+                    
+                    <!-- m=.85714-->
+
+
+                        <TextBlock
+                        Text="Plate Setup"
+                        FontSize="22"
+                        Padding="8"    
+                        FontWeight="SemiBold"
+                        Foreground="#dce5e6"
+                        HorizontalAlignment="Left"
+                        Margin="75,0,0,0"/>
+                </Grid>
+                <!-- interactive elements -->
+                <StackPanel Padding="20"
+                      Spacing="10">
+                    <DropDownButton 
                     x:Name="PlatesDropDownButton"
                     Content="Udrop chip"
                     Width="150"
-                    Background="{ThemeResource ControlFillColorDefaultBrush}">
-                    <DropDownButton.Resources>
-                        <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
-                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
-                    </DropDownButton.Resources>
-                    <DropDownButton.Flyout>
-                        <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem Text="Plate A Only" Tag="AAAA" Click="PlateSelected"/>
-                            <MenuFlyoutItem Text="Plate B Only" Tag="BBBB" Click="PlateSelected"/>
-                            <MenuFlyoutItem Text="Plates read ABAB" Tag="ABAB" Click="PlateSelected"/>
-                            <MenuFlyoutItem Text="Plates read BABA" Tag="BABA" Click="PlateSelected"/>
-                        </MenuFlyout>
-                    </DropDownButton.Flyout>
-                </DropDownButton>
+                    Background="{ThemeResource ControlFillColorDefaultBrush}"
+                    Foreground="White">
+                        <DropDownButton.Resources>
+                            <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
+                        </DropDownButton.Resources>
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Text="Plate A Only" Tag="AAAA" Click="PlateSelected"/>
+                                <MenuFlyoutItem Text="Plate B Only" Tag="BBBB" Click="PlateSelected"/>
+                                <MenuFlyoutItem Text="Plates read ABAB" Tag="ABAB" Click="PlateSelected"/>
+                                <MenuFlyoutItem Text="Plates read BABA" Tag="BABA" Click="PlateSelected"/>
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                <TextBox
+                    <TextBox
                     x:Name="MyTextBox"
                     PlaceholderText="Enter H Barcode"
                     FontSize="14"
                     Background="{ThemeResource TextControlBackground}"
-                    BorderBrush="{ThemeResource TextControlBorderBrush}">
-                    <TextBox.Resources>
-                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="#444444"/>
-                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#FF0078D7"/>
-                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#FF0078D7"/>
-                    </TextBox.Resources>
-                </TextBox>
+                    BorderBrush="{ThemeResource TextControlBorderBrush}"
+                    Foreground="White">
+                        <TextBox.Resources>
+                            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#444444"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#FF0078D7"/>
+                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#FF0078D7"/>
+                        </TextBox.Resources>
+                    </TextBox>
 
-                <DropDownButton 
+                    <DropDownButton 
     x:Name="nPlatesDropDownButton"
     Content="n Chips read"
     Width="150"
     Background="{ThemeResource ControlFillColorDefaultBrush}">
-                    <DropDownButton.Resources>
-                        <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
-                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
-                    </DropDownButton.Resources>
-                    <DropDownButton.Flyout>
-                        <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem Text="1" Tag="1" Click="PlateCount"/>
-                            <MenuFlyoutItem Text="2" Tag="2" Click="PlateCount"/>
-                            <MenuFlyoutItem Text="3" Tag="3" Click="PlateCount"/>
-                            <MenuFlyoutItem Text="4" Tag="4" Click="PlateCount"/>
-                        </MenuFlyout>
-                    </DropDownButton.Flyout>
-                </DropDownButton>
+                        <DropDownButton.Resources>
+                            <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
+                        </DropDownButton.Resources>
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Text="1" Tag="1" Click="PlateCount"/>
+                                <MenuFlyoutItem Text="2" Tag="2" Click="PlateCount"/>
+                                <MenuFlyoutItem Text="3" Tag="3" Click="PlateCount"/>
+                                <MenuFlyoutItem Text="4" Tag="4" Click="PlateCount"/>
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                <CheckBox
+                    <CheckBox
                     x:Name="MyCheckBox"
                     Content="Correct number of Samples"
                     FontSize="14"
                     Foreground="#444444"
                     HorizontalAlignment="Center">
-                </CheckBox>
+                    </CheckBox>
 
-                <Grid VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                    <Grid VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
 
-                    <Button
+                        <Button
                         Grid.Column="0"
                         Content="Check Output Files"
                         Height="36"
@@ -102,13 +125,13 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Click="OnSubmitClicked">
-                        <Button.Resources>
-                            <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
-                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
-                        </Button.Resources>
-                    </Button>
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
+                            </Button.Resources>
+                        </Button>
 
-                    <Button
+                        <Button
                         Grid.Column="1"
                         Content="Run My assays"
                         Height="36"
@@ -118,12 +141,28 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Click="LaunchCliButton_Click">
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
+                            </Button.Resources>
+                        </Button>
+                    </Grid>
+                    <Button
+           Grid.Column="0"
+           Content="Combine Output Files"
+           Height="36"
+           FontSize="14"
+           Background="{ThemeResource ControlFillColorDefaultBrush}"
+           Foreground="White"
+           HorizontalAlignment="Left"
+           VerticalAlignment="Center"
+           Click="OnCombineClick">
                         <Button.Resources>
                             <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
                         </Button.Resources>
                     </Button>
-                </Grid>
+                </StackPanel>
 
             </StackPanel>
         </Border>
