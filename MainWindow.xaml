@@ -11,7 +11,7 @@
             VerticalAlignment="Center"
             
             Width="470"
-            Height="300">
+            Height="350">
 
             <Border.Shadow>
                 <ThemeShadow />
@@ -24,15 +24,19 @@
                     Points="0,0 352.5,0 300,45 0,45"
                     Fill="#313834"/>
                     <Polyline
-                    Points="346.64, 1 289.16,50 0,50"
+                    Points="346, 1 288.83,50 "
                     Stroke="#FF0078D7"
                     StrokeThickness="1.5"/>
+                    <Polyline
+                    Points=" 288.83,50 0,50"
+                    Stroke="#FF0078D7"
+                    StrokeThickness="2.4"/>
                     <Polyline
                     Points="470, 0 352.5,0 300,45 0,45"
                     Stroke="#dce5e6"
                     StrokeThickness="2"/>
                     
-                    <!-- m=.85714-->
+                    <!-- line angle m=.85714-->
 
 
                         <TextBlock
@@ -82,10 +86,10 @@
                     </TextBox>
 
                     <DropDownButton 
-    x:Name="nPlatesDropDownButton"
-    Content="n Chips read"
-    Width="150"
-    Background="{ThemeResource ControlFillColorDefaultBrush}">
+                    x:Name="nPlatesDropDownButton"
+                    Content="n Chips read"
+                    Width="150"
+                    Background="{ThemeResource ControlFillColorDefaultBrush}">
                         <DropDownButton.Resources>
                             <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
@@ -154,7 +158,7 @@
            FontSize="14"
            Background="{ThemeResource ControlFillColorDefaultBrush}"
            Foreground="White"
-           HorizontalAlignment="Left"
+           HorizontalAlignment="Center"
            VerticalAlignment="Center"
            Click="OnCombineClick">
                         <Button.Resources>

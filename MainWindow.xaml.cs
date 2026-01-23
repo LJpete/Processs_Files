@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using ABI.Windows.ApplicationModel.Activation;
 using Microsoft.UI;
@@ -12,8 +13,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Graphics;
+using Windows.Media.Audio;
 using Windows.Security.Cryptography.Core;
 using WinRT.Interop;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+
 
 namespace App1
 {
@@ -94,7 +99,7 @@ namespace App1
             var appWindow = AppWindow.GetFromWindowId(windowId);
 
             appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
-            this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(800, 700, 735, 485));
+            this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(800, 700, 735, 550));
         }
 
 
@@ -546,13 +551,61 @@ namespace App1
                 _ = dlg.ShowAsync();
             }
         }
-        private async void OnCombineClick(object sender, RoutedEventArgs e)
+
+
+        private void OnCombineClick(object sender, RoutedEventArgs e)
         {
+            var exeDir = AppContext.BaseDirectory;
+            var locationFile = Path.Combine(exeDir, "system.location");
+
+            if (!File.Exists(locationFile))
+            {
+                throw new FileNotFoundException($"Missing {locationFile}");
+            }
+
+            string dataOutput;
+            using (var reader = new StreamReader(locationFile))
+            {
+                for (int i = 1; i < 8; i++) { reader.ReadLine(); }// skip first 7 lines 
+
+                dataOutput = reader.ReadLine()?.Trim();
+            }
+
+            var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
+
+            var files = Directory.GetFiles(dataOutput, $"{hBarcode}*.xls");
+
+            if (files.Length == 0)
+            {
+                Console.WriteLine("No matching files found.");
+                return;
+            }
+
+            var fileProcessed = Path.Combine(
+                dataOutput, "/Processed/",
+                $"{hBarcode}_processed.xlsx"
+            );
+            
+
+            var allCsv = Directory.EnumerateFiles(dataOutput, hBarcode + "*.csv", SearchOption.TopDirectoryOnly);
+            string[] header = { File.ReadLines(allCsv.First()).First(l => !string.IsNullOrWhiteSpace(l)) };
+            var mergedData = allCsv
+                .SelectMany(csv => File.ReadLines(csv)
+                    .SkipWhile(l => string.IsNullOrWhiteSpace(l)).Skip(1));// skip header of each file     
+            File.WriteAllLines(fileProcessed, header.Concat(mergedData));
+
+
+            Console.WriteLine($"Combined file created: {dataOutput}");
         }
+        
 
 
-        private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
+
+
+
+                private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
         {
+            bool myAssays = false;
             if (numberOfPlates <= 0)
             {
                 var dlg = new ContentDialog
@@ -571,6 +624,8 @@ namespace App1
             {
                 await LaunchCliForPlateAsync(cplates);
             }
+           myAssays = true;
+
         }
 
     }
