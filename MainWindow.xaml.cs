@@ -132,12 +132,12 @@ namespace App1
         public ListView GetRecentFilesList(string SysOutput)
         {
             var takeCount = Math.Max(1, numberOfPlates);
-            var files = Directory.GetFiles(SysOutput)
-                                 .Select(f => new FileInfo(f))
-                                 .OrderByDescending(f => f.LastWriteTime)
-                                 .Take(takeCount)
-                                 .Select(f => $"{f.Name}  ({f.LastWriteTime:g})")
-                                 .ToList();
+            var files = Directory.GetFiles(SysOutput, "*.xlsx")
+                         .Select(f => new FileInfo(f))
+                         .OrderByDescending(f => f.LastWriteTime)
+                         .Take(takeCount)
+                         .Select(f => $"{f.Name}  ({f.LastWriteTime:g})")
+                         .ToList();
 
             return new ListView
             {
