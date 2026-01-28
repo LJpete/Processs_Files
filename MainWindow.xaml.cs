@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -555,57 +556,70 @@ namespace App1
 
         private void OnCombineClick(object sender, RoutedEventArgs e)
         {
-            var exeDir = AppContext.BaseDirectory;
-            var locationFile = Path.Combine(exeDir, "system.location");
+     
 
-            if (!File.Exists(locationFile))
-            {
-                throw new FileNotFoundException($"Missing {locationFile}");
+                var exeDir = AppContext.BaseDirectory;
+                var locationFile = Path.Combine(exeDir, "system.location");
+
+                if (!File.Exists(locationFile))
+                {
+                var oops = new ContentDialog
+                {
+                    Title = "Launched",
+                    Content = $"location file not found.",
+                    CloseButtonText = "OK",
+                    XamlRoot = Content.XamlRoot
+                };
+                _ = oops.ShowAsync();
             }
 
-            string dataOutput;
-            using (var reader = new StreamReader(locationFile))
-            {
-                for (int i = 1; i < 8; i++) { reader.ReadLine(); }// skip first 7 lines 
+                string dataOutput;
+                using (var reader = new StreamReader(locationFile))
+                {
+                    for (int i = 1; i < 8; i++) { reader.ReadLine(); }// skip first 7 lines 
 
-                dataOutput = reader.ReadLine()?.Trim();
+                    dataOutput = reader.ReadLine()?.Trim();
+                }
+
+                var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
+                   
+                var files = Directory.GetFiles(dataOutput, $"{hBarcode}*.csv");
+
+                if (files.Length == 0)
+                {
+                    Console.WriteLine("No matching output files found.");
+                    return;
+                }
+
+                var fileProcessed = Path.Combine(
+                    dataOutput, "/Processed/",
+                    $"{hBarcode}_processed.xlsx"
+                );
+
+
+                var allCsv = Directory.EnumerateFiles(dataOutput, hBarcode + "*.csv", SearchOption.TopDirectoryOnly);
+                string[] header = { File.ReadLines(allCsv.First()).First(l => !string.IsNullOrWhiteSpace(l)) };
+                var mergedData = allCsv
+                    .SelectMany(csv => File.ReadLines(csv)
+                        .SkipWhile(l => string.IsNullOrWhiteSpace(l)).Skip(1));// skip header of each file     
+                File.WriteAllLines(fileProcessed, header.Concat(mergedData));
+
+
+                Console.WriteLine($"Combined file created: {dataOutput}");
+
+                FileInfo fi = new FileInfo(fileProcessed);
+                if (fi.Exists)
+                {
+                    System.Diagnostics.Process.Start(fileProcessed);
+                }
+                else
+                {
+                }
             }
-
-            var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
-
-            var files = Directory.GetFiles(dataOutput, $"{hBarcode}*.xls");
-
-            if (files.Length == 0)
-            {
-                Console.WriteLine("No matching files found.");
-                return;
-            }
-
-            var fileProcessed = Path.Combine(
-                dataOutput, "/Processed/",
-                $"{hBarcode}_processed.xlsx"
-            );
             
-
-            var allCsv = Directory.EnumerateFiles(dataOutput, hBarcode + "*.csv", SearchOption.TopDirectoryOnly);
-            string[] header = { File.ReadLines(allCsv.First()).First(l => !string.IsNullOrWhiteSpace(l)) };
-            var mergedData = allCsv
-                .SelectMany(csv => File.ReadLines(csv)
-                    .SkipWhile(l => string.IsNullOrWhiteSpace(l)).Skip(1));// skip header of each file     
-            File.WriteAllLines(fileProcessed, header.Concat(mergedData));
-
-
-            Console.WriteLine($"Combined file created: {dataOutput}");
-        }
-        
-
-
-
-
-
                 private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
         {
-            bool myAssays = false;
+           
             if (numberOfPlates <= 0)
             {
                 var dlg = new ContentDialog
@@ -624,7 +638,7 @@ namespace App1
             {
                 await LaunchCliForPlateAsync(cplates);
             }
-           myAssays = true;
+    
 
         }
 
