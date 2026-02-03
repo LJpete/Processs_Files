@@ -13,7 +13,7 @@
 <h5>'combine output files', your analysis has been completed get everything ready for reeview and upload through a trusty vbs script in excel</h5>
 <H2>file dependencies</H2>
 <h5>This project has two main files for the user to control. At this stage they are stored within the working directory of the program (for simplicity's sake). Perhaps a settings menu would be nice but at the end of the day, Im assuming if you are compiling my code, you can modify the parameters files</h5>
-<h5>the first file: 'arguments.template' variables selected by the user are inserted into this template for run specific details. Please see 'MyAssays user desktop guide' for more information on how to structure this call to program. </h5>
-<h5>The other file that might need modification is: 'system.locations'. This is how the end user defines where the program looks for data.follwoing the format: ([name of location],\n, [absolute path of location],\n) ..... 5 times</h5>
+<h5>the first file: 'arguments.template' variables selected by the user are inserted into this template for run specific details. Please see 'MyAssays user desktop guide' for more information on how to structure this call to program. variables are ,'[hbarcode]' and '*' where * is the selected protocol for analysis plate A/B/...n </h5>
+<h5>The other file that might need modification is: 'system.locations'. This is how the end user defines where the program looks for data. in this file 'protocol path template' contains a variable that is subbed out 'protocol path template' {plateVar}  </h5>
 <h2>Changes to be made</h2>
 <h5>Cleanup some of the junk dll files created when compiling/random language packs is a big one. Also if it becomes an issue where the wrong plate is being is being selected[a where b should be....ect], it wouldnt be hard to create barcodes, have the liquid handler scan the barcodes and create and output list. this would remove a place where the user would have to make a decision.</h5>
