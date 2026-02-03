@@ -1,23 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
-using ABI.Windows.ApplicationModel.Activation;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Windows.Graphics;
-using Windows.Media.Audio;
-using Windows.Security.Cryptography.Core;
 using WinRT.Interop;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace App1
 {
@@ -91,7 +82,7 @@ namespace App1
 
             // Remove system title bar
             ExtendsContentIntoTitleBar = true;
-       
+
             // Optional: disable resize
             var hwnd = WindowNative.GetWindowHandle(this);
             var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
@@ -684,7 +675,7 @@ namespace App1
 
         private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
         {
-           
+
             if (numberOfPlates <= 0)
             {
                 var dlg = new ContentDialog
@@ -703,7 +694,7 @@ namespace App1
             {
                 await LaunchCliForPlateAsync(cplates);
             }
-    
+
 
         }
 
