@@ -19,8 +19,6 @@ using Windows.Security.Cryptography.Core;
 using WinRT.Interop;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-
-
 namespace App1
 {
     public sealed partial class MainWindow : Window
@@ -554,70 +552,137 @@ namespace App1
         }
 
 
-        private void OnCombineClick(object sender, RoutedEventArgs e)
+        private async void OnCombineClick(object sender, RoutedEventArgs e)
         {
-     
+            var exeDir = AppContext.BaseDirectory;
+            var locationFile = Path.Combine(exeDir, "system.location");
 
-                var exeDir = AppContext.BaseDirectory;
-                var locationFile = Path.Combine(exeDir, "system.location");
 
-                if (!File.Exists(locationFile))
+            var plate = protocol_Plate ?? string.Empty;
+            var barcode = MyTextBox?.Text ?? string.Empty;
+
+            //check for number of plats also required
+            if (string.IsNullOrWhiteSpace(barcode))
+            {
+                var err = new ContentDialog
                 {
+                    Title = "Missing input",
+                    Content = "Please enter a barcode before launching.",
+                    CloseButtonText = "OK",
+                    XamlRoot = Content.XamlRoot
+                };
+                _ = err.ShowAsync();
+                return;
+            }
+
+            if (!File.Exists(locationFile))
+            {
                 var oops = new ContentDialog
                 {
                     Title = "Launched",
-                    Content = $"location file not found.",
+                    Content = "location file not found.",
                     CloseButtonText = "OK",
                     XamlRoot = Content.XamlRoot
                 };
                 _ = oops.ShowAsync();
+                return;
             }
 
-                string dataOutput;
-                using (var reader = new StreamReader(locationFile))
+            string dataOutput;
+            using (var reader = new StreamReader(locationFile))
+            {
+                for (int i = 1; i < 8; i++) { reader.ReadLine(); }// skip first 7 lines 
+                dataOutput = reader.ReadLine()?.Trim();
+            }
+
+            var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
+            var files = Directory.GetFiles(dataOutput, $"{hBarcode}*.csv");
+
+            if (files.Length == 0)
+            {
+                var oops = new ContentDialog
                 {
-                    for (int i = 1; i < 8; i++) { reader.ReadLine(); }// skip first 7 lines 
+                    Title = "Launched",
+                    Content = "No files matching entered HBarcode",
+                    CloseButtonText = "OK",
+                    XamlRoot = Content.XamlRoot
+                };
+                _ = oops.ShowAsync();
+                return;
+            }
 
-                    dataOutput = reader.ReadLine()?.Trim();
-                }
 
-                var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
-                   
-                var files = Directory.GetFiles(dataOutput, $"{hBarcode}*.csv");
 
-                if (files.Length == 0)
+            if (files.Length >= 1)
+            {
+                var finalDialog = new ContentDialog
                 {
-                    Console.WriteLine("No matching output files found.");
+                    Title = "Launched",
+                    Content = "files to combine: " + string.Join(", ", files),
+                    CloseButtonText = "Not my plates",
+                    PrimaryButtonText = "Merge and open",
+                    XamlRoot = Content.XamlRoot
+                };
+                var finalResult = await finalDialog.ShowAsync();
+                if (finalResult != ContentDialogResult.Primary)
+                {
                     return;
                 }
+            }
+            var processedDir = Path.Combine(dataOutput, "Processed");
+            if (!Directory.Exists(processedDir))
+            {
+                Directory.CreateDirectory(processedDir);
+            }
+            var fileProcessed = Path.Combine(processedDir, $"{hBarcode}_processed.csv");
 
-                var fileProcessed = Path.Combine(
-                    dataOutput, "/Processed/",
-                    $"{hBarcode}_processed.xlsx"
-                );
+            var allCsv = Directory.EnumerateFiles(dataOutput, hBarcode + "*.csv", SearchOption.TopDirectoryOnly);
+            string[] header = { File.ReadLines(allCsv.First()).First(l => !string.IsNullOrWhiteSpace(l)) };
+            var mergedData = allCsv
+                .SelectMany(csv => File.ReadLines(csv)
+                    .SkipWhile(l => string.IsNullOrWhiteSpace(l)).Skip(1));// skip header of each file     
+            File.WriteAllLines(fileProcessed, header.Concat(mergedData));
 
+            Console.WriteLine($"Combined file created: {fileProcessed}");
 
-                var allCsv = Directory.EnumerateFiles(dataOutput, hBarcode + "*.csv", SearchOption.TopDirectoryOnly);
-                string[] header = { File.ReadLines(allCsv.First()).First(l => !string.IsNullOrWhiteSpace(l)) };
-                var mergedData = allCsv
-                    .SelectMany(csv => File.ReadLines(csv)
-                        .SkipWhile(l => string.IsNullOrWhiteSpace(l)).Skip(1));// skip header of each file     
-                File.WriteAllLines(fileProcessed, header.Concat(mergedData));
-
-
-                Console.WriteLine($"Combined file created: {dataOutput}");
-
-                FileInfo fi = new FileInfo(fileProcessed);
-                if (fi.Exists)
+            FileInfo fi = new FileInfo(fileProcessed);
+            if (fi.Exists)
+            {
+                try
                 {
-                    System.Diagnostics.Process.Start(fileProcessed);
+
+                    string Excel;
+                    using (var reader = new StreamReader(locationFile))
+                    {
+                        for (int i = 1; i < 10; i++) { reader.ReadLine(); }
+                        Excel = reader.ReadLine()?.Trim();
+                    }
+
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = Excel;
+                    startInfo.Arguments = fileProcessed;
+                    startInfo.UseShellExecute = true;
+                    startInfo.WindowStyle = ProcessWindowStyle.Normal;
+
+                    using (Process proc = Process.Start(startInfo)) ;
                 }
-                else
+                catch (Exception)
                 {
+                    var err = new ContentDialog
+                    {
+                        Title = "Open Excel",
+                        Content = "An error has occoured openeing excel",
+                        CloseButtonText = "OK",
+                        XamlRoot = Content.XamlRoot
+                    };
+                    _ = err.ShowAsync();
+                    return;
                 }
             }
-            
-                private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
+        }
+
+
+        private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
         {
            
             if (numberOfPlates <= 0)
