@@ -354,22 +354,6 @@ namespace App1
 
         }
 
-        private static string QuotePath(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                return "\"\"";
-            }
-
-            // Simple escape of internal quotes
-            var safe = path.Replace("\"", "\\\"");
-            if (!safe.StartsWith("\"") || !safe.EndsWith("\""))
-            {
-                safe = $"\"{safe}\"";
-            }
-
-            return safe;
-        }
 
         // Build the final Arguments string by performing placeholder replacements.
         // plateVar: value to substitute for [PlateVar]
