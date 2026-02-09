@@ -7,7 +7,7 @@
 <h5>In my implimentation, analysis chips (udrop nano) require their own well based correction factor. These values have been integrated into the my assay protocol and ajust for microvariations within the quarts across the reusable plate. The function of each ui element can be seen below:</h5>
 <h5>'uDrop chip', distincnt methods (in my case [A|B] can be run with the suitable corrrection factor for the relative chip loaded,</h5>
 <h5>'hBarcode' refers to the batch of sampeles</h5>
-<h5>'n chips read', this one should be pretty sstraight cut, samples from batch are split across n chips in the analyser</h5>
+<h5>'n chips read', this one should be pretty sstraight cut, samples from batch are split across [n] number of chips in the analyser</h5>
 <h5>'check output files', this  </h5>
 <h5>'run my assays', this is the crux, run your analsis through the software (my assays, plate by plate)</h5>
 <h5>'combine output files', your analysis has been completed get everything ready for reeview and upload through a trusty vbs script in excel</h5>
