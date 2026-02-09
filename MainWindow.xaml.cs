@@ -656,7 +656,6 @@ namespace App1
             }
         }
 
-
         private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
         {
 
