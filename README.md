@@ -8,12 +8,12 @@
 <h5>'uDrop chip', distincnt methods (in my case [A|B] can be run with the suitable corrrection factor for the relative chip loaded,</h5>
 <h5>'hBarcode' refers to the batch of sampeles</h5>
 <h5>'n chips read', this one should be pretty sstraight cut, samples from batch are split across [n] number of chips in the analyser</h5>
-<h5>'check output files', this  </h5>
-<h5>'run my assays', this is the crux, run your analsis through the software (my assays, plate by plate)</h5>
-<h5>'combine output files', your analysis has been completed get everything ready for reeview and upload through a trusty vbs script in excel</h5>
+<h5>'check output files', this looks for our raw data from the analyser. the N most recent files are batched together and nammed as [Hbarcode].[1]; [Hbarcode].[2] ..... [Hbarcode].[n] </h5>
+<h5>'run my assays', This button launches the sequential analsis through my assays, using the commandline paramaters defined in arguments.template (read chips are read one by one)</h5>
+<h5>'combine output files', Once analysis has been completed has been completed and values are calculated, we get everything ready for reeview and upload through a trusty vbs script in excel. this button merges the files and opens excel so that the user can upload the data.</h5>
 <H2>file dependencies</H2>
-<h5>This project has two main files for the user to control. At this stage they are stored within the working directory of the program (for simplicity's sake). Perhaps a settings menu would be nice but at the end of the day, Im assuming if you are compiling my code, you can modify the parameters files</h5>
+<h5>This project has two main files for the user to control. At this stage they are stored within the installation directory of the program (for simplicity's sake). Perhaps a settings menu would be nice but at the end of the day, Im assuming if you are compiling my code, you can modify the parameters files found alongside the .exe</h5>
 <h5>the first file: 'arguments.template' variables selected by the user are inserted into this template for run specific details. Please see 'MyAssays user desktop guide' for more information on how to structure this call to program. variables are ,'[hbarcode]' and '*' where * is the selected protocol for analysis plate A/B/...n </h5>
-<h5>The other file that might need modification is: 'system.locations'. This is how the end user defines where the program looks for data. in this file 'protocol path template' contains a variable that is subbed out 'protocol path template' {plateVar}  </h5>
+<h5>The other file that might need modification is: 'system.locations'. This is how the end user defines where the program looks for data. iIn this file 'protocol path template' contains a variable that is subbed out 'protocol path template' {plateVar}  </h5>
 <h2>Changes to be made</h2>
 <h5>Cleanup some of the junk dll files created when compiling/random language packs is a big one. Also if it becomes an issue where the wrong plate is being is being selected[a where b should be....ect], it wouldnt be hard to create barcodes, have the liquid handler scan the barcodes and create and output list. this would remove a place where the user would have to make a decision.</h5>
