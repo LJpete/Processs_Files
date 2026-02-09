@@ -15,5 +15,7 @@
 <h5>This project has two main files for the user to control. At this stage they are stored within the installation directory of the program (for simplicity's sake). Perhaps a settings menu would be nice but at the end of the day, Im assuming if you are compiling my code, you can modify the parameters files found alongside the .exe</h5>
 <h5>the first file: 'arguments.template' variables selected by the user are inserted into this template for run specific details. Please see 'MyAssays user desktop guide' for more information on how to structure this call to program. variables are ,'[hbarcode]' and '*' where * is the selected protocol for analysis plate A/B/...n </h5>
 <h5>The other file that might need modification is: 'system.locations'. This is how the end user defines where the program looks for data. iIn this file 'protocol path template' contains a variable that is subbed out 'protocol path template' {plateVar}  </h5>
+<h2>To Deploy this tool in your environment</h2>
+<h5>Simply download the binary, and on in environment with .net8 sdk installed run dotnet build from the source directory.
 <h2>Changes to be made</h2>
 <h5>Cleanup some of the junk dll files created when compiling/random language packs is a big one. Also if it becomes an issue where the wrong plate is being is being selected[a where b should be....ect], it wouldnt be hard to create barcodes, have the liquid handler scan the barcodes and create and output list. this would remove a place where the user would have to make a decision.</h5>
