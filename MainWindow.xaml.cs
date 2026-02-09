@@ -20,7 +20,7 @@ namespace App1
 
         private static string LoadSysLocation()
         {
-            var exeDir = AppContext.BaseDirectory;
+            var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var locationFile = Path.Combine(exeDir, "system.location");
 
             if (!File.Exists(locationFile))
@@ -60,7 +60,7 @@ namespace App1
 
         private static string[] LoadArgumentTemplate()
         {
-            var exeDir = AppContext.BaseDirectory;
+            var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var templatePath = Path.Combine(exeDir, "Arguments.template");
 
             if (!File.Exists(templatePath))
@@ -318,7 +318,7 @@ namespace App1
 
         private static string LoadSystemOutput()
         {
-            var exeDir = AppContext.BaseDirectory;
+            var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var locationFile = Path.Combine(exeDir, "system.location");
 
             if (!File.Exists(locationFile))
@@ -372,7 +372,7 @@ namespace App1
                 plateVar = protocol_Plate[cplates - 1].ToString();
             }
 
-            var exeDir = AppContext.BaseDirectory;
+            var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var locationFile = Path.Combine(exeDir, "system.location");
 
             if (!File.Exists(locationFile))
@@ -529,7 +529,7 @@ namespace App1
 
         private async void OnCombineClick(object sender, RoutedEventArgs e)
         {
-            var exeDir = AppContext.BaseDirectory;
+            var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var locationFile = Path.Combine(exeDir, "system.location");
 
 

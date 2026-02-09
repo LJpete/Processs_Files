@@ -24,13 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="system.location">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Arguments.template">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Update="system.location">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+	<ItemGroup>
+		<None Update="Arguments.Template">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
   <!-- Publish Properties -->
   <PropertyGroup>
