@@ -9,6 +9,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinRT.Interop;
+using System.Runtime.InteropServices;
 
 namespace App1
 {
@@ -80,18 +81,32 @@ namespace App1
         {
             this.InitializeComponent();
 
-            // Remove system title bar
             ExtendsContentIntoTitleBar = true;
 
-            // Optional: disable resize
             var hwnd = WindowNative.GetWindowHandle(this);
             var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
             var appWindow = AppWindow.GetFromWindowId(windowId);
 
             appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
-            this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(800, 700, 735, 550));
+
+            // Get DPI for the window
+            var dpi = GetDpiForWindow(hwnd);
+            double scaling = dpi / 96.0;
+
+            // Desired size in DIPs
+            int widthDIPs = 490;
+            int heightDIPs = 370;
+
+            // Convert DIPs to physical pixels
+            int widthPx = (int)(widthDIPs * scaling);
+            int heightPx = (int)(heightDIPs * scaling);
+
+            this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(800, 700, widthPx, heightPx));
         }
 
+        // Add this P/Invoke
+        [DllImport("user32.dll")]
+        static extern uint GetDpiForWindow(IntPtr hWnd);
 
         public void PlateCount(object sender, RoutedEventArgs e)
         {
@@ -658,7 +673,7 @@ namespace App1
 
         private async void LaunchCliButton_Click(object sender, RoutedEventArgs e)
         {
-
+ 
             if (numberOfPlates <= 0)
             {
                 var dlg = new ContentDialog
