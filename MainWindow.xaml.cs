@@ -519,14 +519,7 @@ namespace App1
                     }
                 });
 
-                var ok = new ContentDialog
-                {
-                    Title = "Launched",
-                    Content = $"My assays launched for plate {cplates}.",
-                    CloseButtonText = "OK",
-                    XamlRoot = Content.XamlRoot
-                };
-                _ = ok.ShowAsync();
+               
             }
             catch (Exception ex)
             {
