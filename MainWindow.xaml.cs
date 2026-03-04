@@ -372,7 +372,7 @@ namespace App1
 
         // Build the final Arguments string by performing placeholder replacements.
         // plateVar: value to substitute for [PlateVar]
-        // hBarcode: value to substitute for [Hbarcode] and [HBarcode]
+        // hBarcode: value to substitute for [Hbarcode]
         // plateIndex: integer to replace '*' placeholders
 
         //platevar counter for plates launched to assign plate var
@@ -518,7 +518,7 @@ namespace App1
                         // ignore wait errors
                     }
                 });
-
+                
                
             }
             catch (Exception ex)
@@ -533,7 +533,7 @@ namespace App1
                 _ = dlg.ShowAsync();
             }
         }
-
+        
 
         private async void OnCombineClick(object sender, RoutedEventArgs e)
         {
