@@ -89,7 +89,8 @@
                     x:Name="nPlatesDropDownButton"
                     Content="n Chips read"
                     Width="150"
-                    Background="{ThemeResource ControlFillColorDefaultBrush}">
+                    Background="{ThemeResource ControlFillColorDefaultBrush}"
+                    Foreground="White">
                         <DropDownButton.Resources>
                             <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
