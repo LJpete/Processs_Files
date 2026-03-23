@@ -220,7 +220,7 @@ namespace App1
             {
                 var maxPlates = Math.Max(1, numberOfPlates);
 
-                var filesToRename = Directory.GetFiles(SysOutput)
+                var filesToRename = Directory.GetFiles(SysOutput, "*.xlsx")
                     .Select(p => new FileInfo(p))
                     .OrderByDescending(f => f.LastWriteTime)
                     .Take(maxPlates)
