@@ -10,8 +10,8 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             
-            Width="470"
-            Height="350">
+            Width="450"
+            Height="420">
 
             <Border.Shadow>
                 <ThemeShadow />
@@ -51,10 +51,18 @@
                 <!-- interactive elements -->
                 <StackPanel Padding="20"
                       Spacing="10">
-                    <DropDownButton 
-                    x:Name="PlatesDropDownButton"
-                    Content="Udrop chip"
-                    Width="150">
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <DropDownButton
+                            Grid.Column="0"
+                            x:Name="PlatesDropDownButton"
+                            Content="Udrop chip"
+                            Width="150"
+                            HorizontalAlignment="Left">
                         <!-- Background={ThemeResource ControlFillColorDefaultBrush} -->
                         <DropDownButton.Resources>
                             <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="#444444"/>
@@ -68,22 +76,49 @@
                                 <MenuFlyoutItem Text="Plates read BABA" Tag="BABA" Click="PlateSelected"/>
                             </MenuFlyout>
                         </DropDownButton.Flyout>
-                    </DropDownButton>
+                        </DropDownButton>
 
-                    <TextBox
-                    x:Name="MyTextBox"
-                    TextChanged="MyTextBox_TextChanged"
-                    PlaceholderText="Enter H Barcode"
-                    FontSize="14"
-                    Background="{ThemeResource TextControlBackground}"
-                    BorderBrush="{ThemeResource TextControlBorderBrush}"
-             >
-                        <TextBox.Resources>
-                            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#444444"/>
-                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#FF0078D7"/>
-                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#FF0078D7"/>
-                        </TextBox.Resources>
-                    </TextBox>
+                        <Button
+                            Grid.Column="1"
+                            Content="Refresh"
+                            Click="RefreshSampleList_Click"
+                            HorizontalAlignment="Right"
+                            Background="#f09346"
+                            Foreground="#444444">
+                            <Button.Resources>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7" />
+                            </Button.Resources>
+                        </Button>
+                    </Grid>
+
+                    <Grid x:Name="RecentSampleGrid" Height="82">
+                        <ListView
+                            x:Name="RecentSampleList"
+                            SelectionChanged="RecentSampleList_SelectionChanged"
+                            SelectionMode="Single"
+                            Background="#444444"
+                            BorderBrush="#444444">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="6,3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="{Binding FileName}"
+                                            HorizontalAlignment="Left" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="{Binding LastWriteTimeText}"
+                                            HorizontalAlignment="Right"
+                                            Margin="12,0,0,0" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
 
                         <DropDownButton 
                     x:Name="nPlatesDropDownButton"
@@ -150,7 +185,9 @@
                             </Button.Resources>
                         </Button>
                     </Grid>
+                    
                     <Button
+           Margin="0,10,0,0"                        
            Grid.Column="0"
            Content="Combine Output Files"
            Height="36"

@@ -19,6 +19,14 @@ namespace App1
     public sealed partial class MainWindow : Window
     {
         private int numberOfPlates;
+        private string _selectedHBarcode = string.Empty;
+
+        private sealed class RecentSampleItem
+        {
+            public string FileName { get; init; }
+            public string LastWriteTimeText { get; init; }
+            public string HBarcode { get; init; }
+        }
 
         private static readonly string CliExePath = LoadSysLocation();
 
@@ -83,6 +91,7 @@ namespace App1
         public MainWindow()
         {
             this.InitializeComponent();
+            LoadRecentSampleFiles();
 
             ExtendsContentIntoTitleBar = true;
 
@@ -97,14 +106,72 @@ namespace App1
             double scaling = dpi / 96.0;
 
             // Desired size in DIPs
-            int widthDIPs = 490;
-            int heightDIPs = 370;
+            int widthDIPs = 480;
+            int heightDIPs = 435;
 
             // Convert DIPs to physical pixels
             int widthPx = (int)(widthDIPs * scaling);
             int heightPx = (int)(heightDIPs * scaling);
 
             this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(800, 700, widthPx, heightPx));
+        }
+
+        private void LoadRecentSampleFiles()
+        {
+            var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            var templateFile = Path.Combine(exeDir, "Arguments.template");
+            string samplePattern;
+
+            using (var reader = new StreamReader(templateFile))
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    reader.ReadLine();
+                }
+
+                samplePattern = reader.ReadLine()?.Trim();
+            }
+
+            if (string.IsNullOrWhiteSpace(samplePattern))
+            {
+                RecentSampleList.ItemsSource = Array.Empty<RecentSampleItem>();
+                return;
+            }
+
+            samplePattern = samplePattern.Trim().Trim('"');
+            var sampleDirectory = Path.GetDirectoryName(samplePattern);
+
+            if (string.IsNullOrWhiteSpace(sampleDirectory) ||
+                !Directory.Exists(sampleDirectory))
+            {
+                RecentSampleList.ItemsSource = Array.Empty<RecentSampleItem>();
+                return;
+            }
+
+            var files = Directory.GetFiles(sampleDirectory, "*.xls")
+                .Select(file => new FileInfo(file))
+                .Where(file =>
+                {
+                    var name = Path.GetFileNameWithoutExtension(file.Name);
+                    var lastCharacter = name[^1];
+                    return lastCharacter >= '1' && lastCharacter <= '9';
+                })
+                .OrderByDescending(file => file.LastWriteTime)
+                .Take(3)
+                .Select(file =>
+                {
+                    var name = Path.GetFileNameWithoutExtension(file.Name);
+
+                    return new RecentSampleItem
+                    {
+                        FileName = Path.GetFileNameWithoutExtension(file.Name),
+                        LastWriteTimeText = file.LastWriteTime.ToString("g"),
+                        HBarcode = name[..^1]
+                    };
+                })
+                .ToList();
+
+            RecentSampleList.ItemsSource = files;
         }
 
         // Add this P/Invoke
@@ -126,8 +193,20 @@ namespace App1
 
         private string _selectedPlateText = string.Empty;
 
-        private void MyTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void RecentSampleList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (RecentSampleList.SelectedItem is RecentSampleItem selectedItem)
+            {
+                _selectedHBarcode = selectedItem.HBarcode;
+                MyCheckBox.IsChecked = false;
+            }
+        }
+
+        private void RefreshSampleList_Click(object sender, RoutedEventArgs e)
+        {
+            RecentSampleList.SelectedItem = null;
+            _selectedHBarcode = string.Empty;
+            LoadRecentSampleFiles();
             MyCheckBox.IsChecked = false;
         }
 
@@ -181,7 +260,7 @@ namespace App1
                 return;
             }
 
-            var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
+            var hBarcode = _selectedHBarcode.Trim();
             var invalidChars = Path.GetInvalidFileNameChars();
             var safeBarcode = string.Concat(hBarcode.Where(c => !invalidChars.Contains(c)));
 
@@ -456,7 +535,7 @@ namespace App1
         private async Task LaunchCliForPlateAsync(int cplates)
         {
             var plate = protocol_Plate ?? string.Empty;
-            var barcode = MyTextBox?.Text ?? string.Empty;
+            var barcode = _selectedHBarcode;
 
             //check for number of plats also required
             if (string.IsNullOrWhiteSpace(plate) || string.IsNullOrWhiteSpace(barcode))
@@ -468,7 +547,7 @@ namespace App1
                     CloseButtonText = "OK",
                     XamlRoot = Content.XamlRoot
                 };
-                _ = err.ShowAsync();
+                await err.ShowAsync();
                 return;
             }
 
@@ -481,7 +560,7 @@ namespace App1
                     CloseButtonText = "OK",
                     XamlRoot = Content.XamlRoot
                 };
-                _ = err.ShowAsync();
+                await err.ShowAsync();
                 return;
             }
 
@@ -490,7 +569,7 @@ namespace App1
             try
             {
                 var plateVar = string.Empty;
-                var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
+                var hBarcode = _selectedHBarcode.Trim();
 
                 var args = BuildCliArguments(plateVar, hBarcode, _selectedPlateText, cplates);
                 Debug.WriteLine($"CLI Arguments: /C \"\"{CliExePath}\" {args}\""); // Output to Visual Studio debug pane
@@ -512,7 +591,7 @@ namespace App1
                         CloseButtonText = "OK",
                         XamlRoot = Content.XamlRoot
                     };
-                    _ = dlg.ShowAsync();
+                    await dlg.ShowAsync();
                     return;
                 }
 
@@ -540,7 +619,7 @@ namespace App1
                     CloseButtonText = "OK",
                     XamlRoot = Content.XamlRoot
                 };
-                _ = dlg.ShowAsync();
+                await dlg.ShowAsync();
             }
         }
         
@@ -552,7 +631,7 @@ namespace App1
 
 
             var plate = protocol_Plate ?? string.Empty;
-            var barcode = MyTextBox?.Text ?? string.Empty;
+            var barcode = _selectedHBarcode;
 
             //check for number of plats also required
             if (string.IsNullOrWhiteSpace(barcode))
@@ -560,7 +639,7 @@ namespace App1
                 var err = new ContentDialog
                 {
                     Title = "Missing input",
-                    Content = "Please enter a barcode before launching.",
+                    Content = "Please select a HBarcode before launching.",
                     CloseButtonText = "OK",
                     XamlRoot = Content.XamlRoot
                 };
@@ -588,7 +667,7 @@ namespace App1
                 dataOutput = reader.ReadLine()?.Trim();
             }
 
-            var hBarcode = MyTextBox?.Text?.Trim() ?? string.Empty;
+            var hBarcode = _selectedHBarcode.Trim();
             var files = Directory.GetFiles(dataOutput, $"{hBarcode}*.csv");
 
             if (files.Length == 0)
@@ -596,7 +675,7 @@ namespace App1
                 var oops = new ContentDialog
                 {
                     Title = "Launched",
-                    Content = "No files matching entered HBarcode",
+                    Content = "No files matching the selected HBarcode",
                     CloseButtonText = "OK",
                     XamlRoot = Content.XamlRoot
                 };

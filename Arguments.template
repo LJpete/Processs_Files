@@ -5,7 +5,7 @@
  "C:\Users\petel\Documents\MyAssays\raw\[Hbarcode]*"
  /import-
  sample ids:
- "I:\mp-common\AUTOLab\NivoSampleSheet\NivoOut\[Hbarcode]*.xls"
+ "C:\demo\[Hbarcode]*.xls"
  /calc
  /export-report:xlsx
  /print
