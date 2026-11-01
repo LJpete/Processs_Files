@@ -157,18 +157,20 @@ namespace App1
                     return lastCharacter >= '1' && lastCharacter <= '9';
                 })
                 .OrderByDescending(file => file.LastWriteTime)
-                .Take(3)
                 .Select(file =>
                 {
                     var name = Path.GetFileNameWithoutExtension(file.Name);
 
                     return new RecentSampleItem
                     {
-                        FileName = Path.GetFileNameWithoutExtension(file.Name),
+                        FileName = name[..^1],
                         LastWriteTimeText = file.LastWriteTime.ToString("g"),
                         HBarcode = name[..^1]
                     };
                 })
+                .GroupBy(item => item.HBarcode, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
+                .Take(3)
                 .ToList();
 
             RecentSampleList.ItemsSource = files;
