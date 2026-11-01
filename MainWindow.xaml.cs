@@ -1,15 +1,18 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinRT.Interop;
-using System.Runtime.InteropServices;
 
 namespace App1
 {
@@ -54,7 +57,7 @@ namespace App1
 
             return exePath;
         }
-
+ 
 
         private static readonly string[] ArgumentTemplate =
             LoadArgumentTemplate();
@@ -117,10 +120,16 @@ namespace App1
 
                 // Optional: update button text (control assumed defined in XAML)
                 nPlatesDropDownButton.Content = $"{plates} Chips read";
+                MyCheckBox.IsChecked = false;
             }
         }
 
         private string _selectedPlateText = string.Empty;
+
+        private void MyTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MyCheckBox.IsChecked = false;
+        }
 
         private void PlateSelected(object sender, RoutedEventArgs e)
         {
@@ -130,6 +139,7 @@ namespace App1
                 PlatesDropDownButton.Content = item.Text;
 
                 _selectedPlateText = item.Text?.Trim();
+                MyCheckBox.IsChecked = false;
             }
         }
 
@@ -220,7 +230,7 @@ namespace App1
             {
                 var maxPlates = Math.Max(1, numberOfPlates);
 
-                var filesToRename = Directory.GetFiles(SysOutput)
+                var filesToRename = Directory.GetFiles(SysOutput, "*.xlsx")
                     .Select(p => new FileInfo(p))
                     .OrderByDescending(f => f.LastWriteTime)
                     .Take(maxPlates)
@@ -372,7 +382,7 @@ namespace App1
 
         // Build the final Arguments string by performing placeholder replacements.
         // plateVar: value to substitute for [PlateVar]
-        // hBarcode: value to substitute for [Hbarcode] and [HBarcode]
+        // hBarcode: value to substitute for [Hbarcode]
         // plateIndex: integer to replace '*' placeholders
 
         //platevar counter for plates launched to assign plate var
@@ -518,15 +528,8 @@ namespace App1
                         // ignore wait errors
                     }
                 });
-
-                var ok = new ContentDialog
-                {
-                    Title = "Launched",
-                    Content = $"My assays launched for plate {cplates}.",
-                    CloseButtonText = "OK",
-                    XamlRoot = Content.XamlRoot
-                };
-                _ = ok.ShowAsync();
+                
+               
             }
             catch (Exception ex)
             {
@@ -540,7 +543,7 @@ namespace App1
                 _ = dlg.ShowAsync();
             }
         }
-
+        
 
         private async void OnCombineClick(object sender, RoutedEventArgs e)
         {
