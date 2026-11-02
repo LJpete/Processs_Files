@@ -202,8 +202,18 @@
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#FF0078D7"/>
                         </Button.Resources>
                     </Button>
+                    
+                    <TextBlock
+                        Grid.Column="0"
+                        Text="Build 02.01.26"
+                        FontSize="12"
+                        FontWeight="SemiBold"
+                        Foreground="#dce5e6"
+                        HorizontalAlignment="Right"
+                        Margin="75,0,0,0"/>
+                    
                 </StackPanel>
-
+                    
             </StackPanel>
         </Border>
     </Grid>
