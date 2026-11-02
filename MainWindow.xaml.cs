@@ -119,12 +119,12 @@ namespace App1
         private void LoadRecentSampleFiles()
         {
             var exeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            var templateFile = Path.Combine(exeDir, "Arguments.template");
+            var templateFile = Path.Combine(exeDir, "System.Location");
             string samplePattern;
 
             using (var reader = new StreamReader(templateFile))
             {
-                for (int i = 1; i < 8; i++)
+                for (int i = 1; i < 12; i++)
                 {
                     reader.ReadLine();
                 }
