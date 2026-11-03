@@ -97,7 +97,7 @@
                             SelectionChanged="RecentSampleList_SelectionChanged"
                             SelectionMode="Single"
                             Background="#444444"
-                            BorderBrush="#444444">
+                            Foreground="#dce5e6">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Padding="6,3">
