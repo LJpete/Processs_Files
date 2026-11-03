@@ -148,7 +148,7 @@ namespace App1
                 return;
             }
 
-            var files = Directory.GetFiles(sampleDirectory, "*.xls")
+            var files = Directory.GetFiles(sampleDirectory)
                 .Select(file => new FileInfo(file))
                 .Where(file =>
                 {
